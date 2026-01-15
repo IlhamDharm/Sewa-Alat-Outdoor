@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Laporan Penyewa - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Laporan Berdasarkan Penyewa</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('laporan.index') }}" class="btn btn-secondary">Kembali</a>
+    </div>
+</div>
+
+{% if penyewa_stats %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>No</th>
+                <th>Nama Penyewa</th>
+                <th>No HP</th>
+                <th>Total Sewa</th>
+                <th>Total Biaya</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in penyewa_stats %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><strong>{{ stat.penyewa.nama }}</strong></td>
+                <td>{{ stat.penyewa.no_hp }}</td>
+                <td><span class="badge bg-info">{{ stat.total_sewa }}</span></td>
+                <td>Rp{{ stat.total_biaya:,.0f }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p class="mb-0">Belum ada data penyewa.</p>
+</div>
+{% endif %}
+{% endblock %}

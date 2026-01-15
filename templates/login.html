@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Login Admin - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 offset-md-4">
+        <div class="card mt-5">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Login Admin</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                        <a href="{{ url_for('home') }}" class="btn btn-secondary">Kembali</a>
+                    </div>
+                </form>
+                <p class="text-muted mt-3 small">Default admin: <strong>admin</strong> / <strong>admin123</strong>. Ubah di environment.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

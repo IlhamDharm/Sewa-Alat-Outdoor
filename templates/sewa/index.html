@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Transaksi Sewa - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Daftar Transaksi Sewa</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('sewa.tambah') }}" class="btn btn-success">+ Buat Transaksi Sewa Baru</a>
+    </div>
+</div>
+
+{% if sewa_list %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>No</th>
+                <th>ID Sewa</th>
+                <th>Penyewa</th>
+                <th>Tgl Sewa</th>
+                <th>Tgl Kembali Rencana</th>
+                <th>Total Biaya</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sewa in sewa_list %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><strong>#{{ sewa.id }}</strong></td>
+                <td>{{ sewa.penyewa.nama }}</td>
+                <td>{{ sewa.tanggal_sewa.strftime('%d-%m-%Y') }}</td>
+                <td>{{ sewa.tanggal_rencana_kembali.strftime('%d-%m-%Y') }}</td>
+                <td>Rp{{ sewa.total_biaya:,.0f }}</td>
+                <td>
+                    {% if sewa.status == 'aktif' %}
+                        <span class="badge bg-success">Aktif</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Dikembalikan</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('sewa.detail', id=sewa.id) }}" class="btn btn-sm btn-info">Detail</a>
+                    {% if sewa.status == 'aktif' %}
+                        <a href="{{ url_for('sewa.pengembalian', id=sewa.id) }}" class="btn btn-sm btn-warning">Kembali</a>
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ sewa.id }}">
+                            Hapus
+                        </button>
+
+                        <!-- Delete Modal -->
+                        <div class="modal fade" id="deleteModal{{ sewa.id }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Konfirmasi Hapus</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Apakah Anda yakin ingin menghapus transaksi #{{ sewa.id }} - {{ sewa.penyewa.nama }}?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <form method="POST" action="{{ url_for('sewa.hapus', id=sewa.id) }}" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger">Hapus</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p class="mb-0">Belum ada transaksi sewa. <a href="{{ url_for('sewa.tambah') }}">Buat transaksi sewa baru</a></p>
+</div>
+{% endif %}
+{% endblock %}

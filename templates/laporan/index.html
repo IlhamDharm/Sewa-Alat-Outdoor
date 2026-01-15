@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Laporan - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Laporan Transaksi Penyewaan</h2>
+    </div>
+</div>
+
+<!-- Statistik Umum -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Transaksi</h5>
+                <h2 class="text-primary">{{ total_transaksi }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Pendapatan</h5>
+                <h2 class="text-success">Rp{{ total_pendapatan:,.0f }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Denda</h5>
+                <h2 class="text-warning">Rp{{ total_denda:,.0f }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total Penerimaan</h5>
+                <h2 class="text-info">Rp{{ (total_pendapatan + total_denda):,.0f }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabel Transaksi -->
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Daftar Semua Transaksi</h5>
+    </div>
+    <div class="card-body">
+        {% if sewa_list %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Penyewa</th>
+                        <th>Tgl Sewa</th>
+                        <th>Tgl Rencana Kembali</th>
+                        <th>Total Biaya</th>
+                        <th>Denda</th>
+                        <th>Total Penerimaan</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sewa in sewa_list %}
+                    <tr>
+                        <td><strong>#{{ sewa.id }}</strong></td>
+                        <td>{{ sewa.penyewa.nama }}</td>
+                        <td>{{ sewa.tanggal_sewa.strftime('%d-%m-%Y') }}</td>
+                        <td>{{ sewa.tanggal_rencana_kembali.strftime('%d-%m-%Y') }}</td>
+                        <td>Rp{{ sewa.total_biaya:,.0f }}</td>
+                        <td>Rp{{ sewa.total_denda:,.0f }}</td>
+                        <td><strong>Rp{{ (sewa.total_biaya + sewa.total_denda):,.0f }}</strong></td>
+                        <td>
+                            {% if sewa.status == 'aktif' %}
+                                <span class="badge bg-success">Aktif</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Dikembalikan</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">Belum ada transaksi.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Tombol Laporan Lainnya -->
+<div class="row mt-4">
+    <div class="col-md-6">
+        <a href="{{ url_for('laporan.laporan_penyewa') }}" class="btn btn-info btn-block w-100">
+            📊 Laporan Penyewa
+        </a>
+    </div>
+    <div class="col-md-6">
+        <a href="{{ url_for('laporan.laporan_alat') }}" class="btn btn-info btn-block w-100">
+            📦 Laporan Alat
+        </a>
+    </div>
+</div>
+{% endblock %}

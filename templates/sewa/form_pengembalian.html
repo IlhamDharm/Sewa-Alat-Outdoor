@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Form Pengembalian Alat - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h2>Form Pengembalian Alat</h2>
+        <p class="text-muted">Transaksi #{{ sewa.id }} - {{ sewa.penyewa.nama }}</p>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Informasi Sewa</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Tgl Sewa:</strong> {{ sewa.tanggal_sewa.strftime('%d-%m-%Y') }}</p>
+                        <p><strong>Tgl Rencana Kembali:</strong> {{ sewa.tanggal_rencana_kembali.strftime('%d-%m-%Y') }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Total Biaya:</strong> Rp{{ sewa.total_biaya:,.0f }}</p>
+                        <p><strong>Status:</strong> <span class="badge bg-success">Aktif</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form method="POST" class="mt-4">
+            <div class="mb-3">
+                <label for="tanggal_kembali" class="form-label">Tanggal Pengembalian <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="tanggal_kembali" name="tanggal_kembali" required>
+                <small class="text-muted">Masukkan tanggal alat dikembalikan</small>
+            </div>
+
+            <div class="alert alert-info mt-3" id="info-denda" style="display: none;">
+                <strong>⚠️ Perhatian:</strong>
+                <p class="mb-0">Terdapat keterlambatan <strong id="hari-terlambat"></strong> hari.</p>
+                <p class="mb-0">Denda yang harus dibayar: <strong id="total-denda">Rp0</strong> (Rp10.000/hari)</p>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Proses Pengembalian</button>
+                <a href="{{ url_for('sewa.detail', id=sewa.id) }}" class="btn btn-secondary btn-lg">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+const tanggalRencanaKembali = new Date('{{ sewa.tanggal_rencana_kembali.strftime('%Y-%m-%d') }}');
+const tanggalKembaliInput = document.getElementById('tanggal_kembali');
+const infoDenda = document.getElementById('info-denda');
+const hariTerlambat = document.getElementById('hari-terlambat');
+const totalDenda = document.getElementById('total-denda');
+
+// Set tanggal default ke hari ini
+tanggalKembaliInput.valueAsDate = new Date();
+
+// Hitung denda ketika tanggal berubah
+tanggalKembaliInput.addEventListener('change', function() {
+    const tanggalKembali = new Date(this.value);
+    const diff = Math.floor((tanggalKembali - tanggalRencanaKembali) / (1000 * 60 * 60 * 24));
+    
+    if (diff > 0) {
+        hariTerlambat.textContent = diff;
+        totalDenda.textContent = 'Rp' + (diff * 10000).toLocaleString('id-ID');
+        infoDenda.style.display = 'block';
+    } else {
+        infoDenda.style.display = 'none';
+    }
+});
+
+// Trigger calculation on page load
+tanggalKembaliInput.dispatchEvent(new Event('change'));
+</script>
+{% endblock %}

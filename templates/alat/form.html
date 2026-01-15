@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Alat - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h2>{{ action }} Alat Pendakian</h2>
+        
+        <form method="POST" class="mt-4">
+            <div class="mb-3">
+                <label for="nama" class="form-label">Nama Alat <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="nama" name="nama" 
+                       value="{{ alat.nama if alat else '' }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="kategori" class="form-label">Kategori <span class="text-danger">*</span></label>
+                <select class="form-control" id="kategori" name="kategori" required>
+                    <option value="">-- Pilih Kategori --</option>
+                    <option value="Tenda" {% if alat and alat.kategori == 'Tenda' %}selected{% endif %}>Tenda</option>
+                    <option value="Sleeping Bag" {% if alat and alat.kategori == 'Sleeping Bag' %}selected{% endif %}>Sleeping Bag</option>
+                    <option value="Backpack" {% if alat and alat.kategori == 'Backpack' %}selected{% endif %}>Backpack</option>
+                    <option value="Sepatu Hiking" {% if alat and alat.kategori == 'Sepatu Hiking' %}selected{% endif %}>Sepatu Hiking</option>
+                    <option value="Perlengkapan Keselamatan" {% if alat and alat.kategori == 'Perlengkapan Keselamatan' %}selected{% endif %}>Perlengkapan Keselamatan</option>
+                    <option value="Alat Memasak" {% if alat and alat.kategori == 'Alat Memasak' %}selected{% endif %}>Alat Memasak</option>
+                    <option value="Lainnya" {% if alat and alat.kategori == 'Lainnya' %}selected{% endif %}>Lainnya</option>
+                </select>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="stok" class="form-label">Stok <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="stok" name="stok" 
+                               value="{{ alat.stok if alat else 0 }}" min="0" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="harga_per_hari" class="form-label">Harga/Hari (Rp) <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" id="harga_per_hari" name="harga_per_hari" 
+                               value="{{ alat.harga_per_hari if alat else 0 }}" min="0" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="kondisi" class="form-label">Kondisi <span class="text-danger">*</span></label>
+                <select class="form-control" id="kondisi" name="kondisi" required>
+                    <option value="baik" {% if alat and alat.kondisi == 'baik' %}selected{% endif %}>Baik</option>
+                    <option value="rusak" {% if alat and alat.kondisi == 'rusak' %}selected{% endif %}>Rusak</option>
+                    <option value="rusak berat" {% if alat and alat.kondisi == 'rusak berat' %}selected{% endif %}>Rusak Berat</option>
+                </select>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">{{ action }} Alat</button>
+                <a href="{{ url_for('alat.index') }}" class="btn btn-secondary btn-lg">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

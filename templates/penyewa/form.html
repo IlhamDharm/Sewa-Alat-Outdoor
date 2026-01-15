@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} Penyewa - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h2>{{ action }} Data Penyewa</h2>
+        
+        <form method="POST" class="mt-4">
+            <div class="mb-3">
+                <label for="nama" class="form-label">Nama Penyewa <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="nama" name="nama" 
+                       value="{{ penyewa.nama if penyewa else '' }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="no_hp" class="form-label">No HP <span class="text-danger">*</span></label>
+                <input type="tel" class="form-control" id="no_hp" name="no_hp" 
+                       value="{{ penyewa.no_hp if penyewa else '' }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
+                <textarea class="form-control" id="alamat" name="alamat" rows="3" required>{{ penyewa.alamat if penyewa else '' }}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="jaminan" class="form-label">Jaminan <span class="text-danger">*</span></label>
+                <select class="form-control" id="jaminan" name="jaminan" required>
+                    <option value="">-- Pilih Jaminan --</option>
+                    <option value="KTP" {% if penyewa and penyewa.jaminan == 'KTP' %}selected{% endif %}>KTP</option>
+                    <option value="SIM" {% if penyewa and penyewa.jaminan == 'SIM' %}selected{% endif %}>SIM</option>
+                    <option value="Kartu Pelajar" {% if penyewa and penyewa.jaminan == 'Kartu Pelajar' %}selected{% endif %}>Kartu Pelajar</option>
+                    <option value="Paspor" {% if penyewa and penyewa.jaminan == 'Paspor' %}selected{% endif %}>Paspor</option>
+                    <option value="Lainnya" {% if penyewa and penyewa.jaminan == 'Lainnya' %}selected{% endif %}>Lainnya</option>
+                </select>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">{{ action }} Penyewa</button>
+                <a href="{{ url_for('penyewa.index') }}" class="btn btn-secondary btn-lg">Batal</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

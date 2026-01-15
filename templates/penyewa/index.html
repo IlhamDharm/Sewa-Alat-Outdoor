@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Manajemen Penyewa - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Daftar Penyewa</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('penyewa.tambah') }}" class="btn btn-success">+ Tambah Penyewa Baru</a>
+    </div>
+</div>
+
+{% if penyewa_list %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>No</th>
+                <th>Nama Penyewa</th>
+                <th>No HP</th>
+                <th>Alamat</th>
+                <th>Jaminan</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for penyewa in penyewa_list %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><strong>{{ penyewa.nama }}</strong></td>
+                <td>{{ penyewa.no_hp }}</td>
+                <td>{{ penyewa.alamat[:30] }}...</td>
+                <td>{{ penyewa.jaminan }}</td>
+                <td>
+                    <a href="{{ url_for('penyewa.edit', id=penyewa.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ penyewa.id }}">
+                        Hapus
+                    </button>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal{{ penyewa.id }}" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Konfirmasi Hapus</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Apakah Anda yakin ingin menghapus <strong>{{ penyewa.nama }}</strong>?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                    <form method="POST" action="{{ url_for('penyewa.hapus', id=penyewa.id) }}" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger">Hapus</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p class="mb-0">Belum ada penyewa yang terdaftar. <a href="{{ url_for('penyewa.tambah') }}">Tambah penyewa baru</a></p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Buat Transaksi Sewa Baru - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block extra_css %}
+<style>
+    .alat-item {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #f9f9f9;
+    }
+    .remove-btn {
+        float: right;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Buat Transaksi Sewa Baru</h2>
+    </div>
+</div>
+
+<form method="POST" class="mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="penyewa_id" class="form-label">Penyewa <span class="text-danger">*</span></label>
+                <select class="form-control" id="penyewa_id" name="penyewa_id" required>
+                    <option value="">-- Pilih Penyewa --</option>
+                    {% for penyewa in penyewa_list %}
+                    <option value="{{ penyewa.id }}">{{ penyewa.nama }} ({{ penyewa.no_hp }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="mb-3">
+                <label for="tanggal_sewa" class="form-label">Tgl Sewa <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="tanggal_sewa" name="tanggal_sewa" required>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="mb-3">
+                <label for="tanggal_rencana_kembali" class="form-label">Tgl Rencana Kembali <span class="text-danger">*</span></label>
+                <input type="date" class="form-control" id="tanggal_rencana_kembali" name="tanggal_rencana_kembali" required>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Alat -->
+    <div class="mt-4">
+        <h4>Pilih Alat yang Disewa</h4>
+        <div id="alat-container">
+            <div class="alat-item" id="alat-1">
+                <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeAlat(1)">Hapus</button>
+                <div class="row">
+                    <div class="col-md-8">
+                        <label class="form-label">Alat <span class="text-danger">*</span></label>
+                        <select class="form-control alat_id" name="alat_id" required>
+                            <option value="">-- Pilih Alat --</option>
+                            {% for alat in alat_list %}
+                            <option value="{{ alat.id }}">{{ alat.nama }} (Stok: {{ alat.stok }}, Rp{{ alat.harga_per_hari:,.0f }}/hari)</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Jumlah <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control alat_jumlah" name="alat_jumlah" min="1" value="1" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" class="btn btn-secondary mt-3" onclick="addAlat()">+ Tambah Alat Lain</button>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-primary btn-lg">Buat Transaksi Sewa</button>
+        <a href="{{ url_for('sewa.index') }}" class="btn btn-secondary btn-lg">Batal</a>
+    </div>
+</form> 
+
+<script>
+let alatCount = 1;
+
+function addAlat() {
+    alatCount++;
+    const container = document.getElementById('alat-container');
+    const newItem = document.createElement('div');
+    newItem.className = 'alat-item';
+    newItem.id = 'alat-' + alatCount;
+    newItem.innerHTML = `
+        <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeAlat(${alatCount})">Hapus</button>
+        <div class="row">
+            <div class="col-md-8">
+                <label class="form-label">Alat <span class="text-danger">*</span></label>
+                <select class="form-control alat_id" name="alat_id">
+                    <option value="">-- Pilih Alat --</option>
+                    {% for alat in alat_list %}
+                    <option value="{{ alat.id }}">{{ alat.nama }} (Stok: {{ alat.stok }}, Rp{{ alat.harga_per_hari:,.0f }}/hari)</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Jumlah <span class="text-danger">*</span></label>
+                <input type="number" class="form-control alat_jumlah" name="alat_jumlah" min="1" value="1">
+            </div>
+        </div>
+    `;
+    container.appendChild(newItem);
+}
+
+function removeAlat(id) {
+    const element = document.getElementById('alat-' + id);
+    if (element && document.querySelectorAll('.alat-item').length > 1) {
+        element.remove();
+    } else {
+        alert('Minimal harus ada satu alat!');
+    }
+}
+
+// Set tanggal default
+document.getElementById('tanggal_sewa').valueAsDate = new Date();
+</script>
+{% endblock %}

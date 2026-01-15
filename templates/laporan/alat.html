@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Laporan Alat - Sistem Penyewaan Alat Outdoor{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Laporan Berdasarkan Alat</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('laporan.index') }}" class="btn btn-secondary">Kembali</a>
+    </div>
+</div>
+
+{% if alat_stats %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>No</th>
+                <th>Nama Alat</th>
+                <th>Kategori</th>
+                <th>Stok Saat Ini</th>
+                <th>Total Disewa</th>
+                <th>Total Pendapatan</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stat in alat_stats %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><strong>{{ stat.alat.nama }}</strong></td>
+                <td>{{ stat.alat.kategori }}</td>
+                <td><span class="badge bg-success">{{ stat.alat.stok }}</span></td>
+                <td>{{ stat.total_disewa }} unit</td>
+                <td>Rp{{ stat.total_pendapatan:,.0f }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p class="mb-0">Belum ada data alat.</p>
+</div>
+{% endif %}
+{% endblock %}
