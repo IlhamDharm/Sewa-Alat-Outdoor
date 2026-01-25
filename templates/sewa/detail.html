@@ -73,8 +73,8 @@
                         <td>{{ loop.index }}</td>
                         <td>{{ detail.alat.nama }} ({{ detail.alat.kategori }})</td>
                         <td>{{ detail.jumlah }}</td>
-                        <td>Rp{{ detail.harga_satuan:,.0f }}</td>
-                        <td>Rp{{ detail.subtotal:,.0f }}</td>
+                        <td>Rp{{ "{:,.0f}".format(detail.harga_satuan) }}</td>
+                        <td>Rp{{ "{:,.0f}".format(detail.subtotal) }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -93,16 +93,16 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-2">
                     <span>Total Biaya Sewa:</span>
-                    <strong>Rp{{ sewa.total_biaya:,.0f }}</strong>
+                    <strong>Rp{{ "{:,.0f}".format(sewa.total_biaya) }}</strong>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
                     <span>Total Denda:</span>
-                    <strong>Rp{{ sewa.total_denda:,.0f }}</strong>
+                    <strong>Rp{{ "{:,.0f}".format(sewa.total_denda) }}</strong>
                 </div>
                 <hr>
                 <div class="d-flex justify-content-between mb-3">
                     <span>Total Pembayaran:</span>
-                    <strong class="text-primary" style="font-size: 1.2em;">Rp{{ (sewa.total_biaya + sewa.total_denda):,.0f }}</strong>
+                    <strong class="text-primary" style="font-size: 1.2em;">Rp{{ "{:,.0f}".format((sewa.total_biaya + sewa.total_denda)) }}</strong>
                 </div>
             </div>
         </div>

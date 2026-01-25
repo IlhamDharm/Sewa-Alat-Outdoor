@@ -31,7 +31,7 @@
                 <td><strong>{{ stat.penyewa.nama }}</strong></td>
                 <td>{{ stat.penyewa.no_hp }}</td>
                 <td><span class="badge bg-info">{{ stat.total_sewa }}</span></td>
-                <td>Rp{{ stat.total_biaya:,.0f }}</td>
+                <td>Rp{{ "{:,.0f}".format(stat.total_biaya) }}</td>
             </tr>
             {% endfor %}
         </tbody>

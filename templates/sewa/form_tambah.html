@@ -63,7 +63,7 @@
                         <select class="form-control alat_id" name="alat_id" required>
                             <option value="">-- Pilih Alat --</option>
                             {% for alat in alat_list %}
-                            <option value="{{ alat.id }}">{{ alat.nama }} (Stok: {{ alat.stok }}, Rp{{ alat.harga_per_hari:,.0f }}/hari)</option>
+                            <option value="{{ alat.id }}">{{ alat.nama }} (Stok: {{ alat.stok }}, Rp{{ "{:,.0f}".format(alat.harga_per_hari) }}/hari)</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -101,7 +101,7 @@ function addAlat() {
                 <select class="form-control alat_id" name="alat_id">
                     <option value="">-- Pilih Alat --</option>
                     {% for alat in alat_list %}
-                    <option value="{{ alat.id }}">{{ alat.nama }} (Stok: {{ alat.stok }}, Rp{{ alat.harga_per_hari:,.0f }}/hari)</option>
+                    <option value="{{ alat.id }}">{{ alat.nama }} (Stok: {{ alat.stok }}, Rp{{ "{:,.0f}".format(alat.harga_per_hari) }}/hari)</option>
                     {% endfor %}
                 </select>
             </div>

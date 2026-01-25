@@ -35,7 +35,7 @@
                 <td>{{ sewa.penyewa.nama }}</td>
                 <td>{{ sewa.tanggal_sewa.strftime('%d-%m-%Y') }}</td>
                 <td>{{ sewa.tanggal_rencana_kembali.strftime('%d-%m-%Y') }}</td>
-                <td>Rp{{ sewa.total_biaya:,.0f }}</td>
+                <td>Rp{{ "{:,.0f}".format(sewa.total_biaya) }}</td>
                 <td>
                     {% if sewa.status == 'aktif' %}
                         <span class="badge bg-success">Aktif</span>

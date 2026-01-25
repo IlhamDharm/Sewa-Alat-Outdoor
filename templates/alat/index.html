@@ -37,7 +37,7 @@
                         {{ alat.stok }}
                     </span>
                 </td>
-                <td>Rp{{ alat.harga_per_hari:,.0f }}</td>
+                <td>Rp{{ "{:,.0f}".format(alat.harga_per_hari) }}</td>
                 <td>
                     {% if alat.kondisi == 'baik' %}
                         <span class="badge bg-success">Baik</span>

@@ -23,7 +23,7 @@
         <div class="card text-center">
             <div class="card-body">
                 <h5 class="card-title">Total Pendapatan</h5>
-                <h2 class="text-success">Rp{{ total_pendapatan:,.0f }}</h2>
+                <h2 class="text-success">Rp{{ "{:,.0f}".format(total_pendapatan) }}</h2>
             </div>
         </div>
     </div>
@@ -31,7 +31,7 @@
         <div class="card text-center">
             <div class="card-body">
                 <h5 class="card-title">Total Denda</h5>
-                <h2 class="text-warning">Rp{{ total_denda:,.0f }}</h2>
+                <h2 class="text-warning">Rp{{ "{:,.0f}".format(total_denda) }}</h2>
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
         <div class="card text-center">
             <div class="card-body">
                 <h5 class="card-title">Total Penerimaan</h5>
-                <h2 class="text-info">Rp{{ (total_pendapatan + total_denda):,.0f }}</h2>
+                <h2 class="text-info">Rp{{ "{:,.0f}".format((total_pendapatan + total_denda)) }}</h2>
             </div>
         </div>
     </div>
@@ -73,9 +73,9 @@
                         <td>{{ sewa.penyewa.nama }}</td>
                         <td>{{ sewa.tanggal_sewa.strftime('%d-%m-%Y') }}</td>
                         <td>{{ sewa.tanggal_rencana_kembali.strftime('%d-%m-%Y') }}</td>
-                        <td>Rp{{ sewa.total_biaya:,.0f }}</td>
-                        <td>Rp{{ sewa.total_denda:,.0f }}</td>
-                        <td><strong>Rp{{ (sewa.total_biaya + sewa.total_denda):,.0f }}</strong></td>
+                        <td>Rp{{ "{:,.0f}".format(sewa.total_biaya) }}</td>
+                        <td>Rp{{ "{:,.0f}".format(sewa.total_denda) }}</td>
+                        <td><strong>Rp{{ "{:,.0f}".format((sewa.total_biaya + sewa.total_denda)) }}</strong></td>
                         <td>
                             {% if sewa.status == 'aktif' %}
                                 <span class="badge bg-success">Aktif</span>

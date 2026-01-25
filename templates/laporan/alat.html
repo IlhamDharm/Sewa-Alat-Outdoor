@@ -33,7 +33,7 @@
                 <td>{{ stat.alat.kategori }}</td>
                 <td><span class="badge bg-success">{{ stat.alat.stok }}</span></td>
                 <td>{{ stat.total_disewa }} unit</td>
-                <td>Rp{{ stat.total_pendapatan:,.0f }}</td>
+                <td>Rp{{ "{:,.0f}".format(stat.total_pendapatan) }}</td>
             </tr>
             {% endfor %}
         </tbody>

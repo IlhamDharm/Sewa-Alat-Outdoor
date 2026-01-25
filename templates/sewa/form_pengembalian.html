@@ -19,7 +19,7 @@
                         <p><strong>Tgl Rencana Kembali:</strong> {{ sewa.tanggal_rencana_kembali.strftime('%d-%m-%Y') }}</p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Total Biaya:</strong> Rp{{ sewa.total_biaya:,.0f }}</p>
+                        <p><strong>Total Biaya:</strong> Rp{{ "{:,.0f}".format(sewa.total_biaya) }}</p>
                         <p><strong>Status:</strong> <span class="badge bg-success">Aktif</span></p>
                     </div>
                 </div>

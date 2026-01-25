@@ -36,6 +36,13 @@ bin/
 include/
 lib/
 
+# Local virtualenv
+.venv/
+.venv/Lib/site-packages/
+
+# Dev scripts
+check_templates.py
+
 # Distribution
 build/
 dist/
