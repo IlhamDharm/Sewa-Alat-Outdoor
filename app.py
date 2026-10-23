@@ -20,21 +20,41 @@ from routes.penyewa import penyewa_bp
 from routes.sewa import sewa_bp
 from routes.laporan import laporan_bp
 import os
+import tempfile
 
 # Inisialisasi Flask App
 app = Flask(__name__)
 
 # Konfigurasi Database
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'sewa_alat.db')
+# DATABASE_URL dipakai untuk database production (misalnya PostgreSQL dari
+# Vercel/Neon). SQLite hanya dipakai sebagai fallback development.
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    # Beberapa provider masih mengirim URL dengan skema postgres:// lama.
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+elif os.environ.get('VERCEL'):
+    # Filesystem deployment Vercel bersifat read-only; /tmp hanya untuk
+    # fallback sementara agar function tidak gagal saat DATABASE_URL belum ada.
+    database_url = 'sqlite:///' + os.path.join(tempfile.gettempdir(), 'sewa_alat.db')
+else:
+    database_url = 'sqlite:///' + os.path.join(basedir, 'sewa_alat.db')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'your-secret-key-here'  # Ganti dengan secret key yang aman
-# Admin credentials (default). Ubah atau set melalui environment untuk production.
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-only-change-this-secret')
+# Admin credentials (default). Ubah melalui environment untuk production.
 app.config['ADMIN_USERNAME'] = os.environ.get('ADMIN_USERNAME', 'admin')
 app.config['ADMIN_PASSWORD'] = os.environ.get('ADMIN_PASSWORD', 'admin123')
 
 # Inisialisasi Database
 db.init_app(app)
+
+# Vercel memuat app.py sebagai serverless function dan tidak menjalankan
+# blok `if __name__ == '__main__'`. Pastikan schema tersedia saat function
+# pertama kali dipanggil.
+with app.app_context():
+    db.create_all()
 
 # Register Blueprints
 app.register_blueprint(alat_bp)
