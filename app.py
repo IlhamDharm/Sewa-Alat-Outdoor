@@ -19,6 +19,8 @@ from routes.alat import alat_bp
 from routes.penyewa import penyewa_bp
 from routes.sewa import sewa_bp
 from routes.laporan import laporan_bp
+from routes.shop import shop_bp
+from sqlalchemy import inspect, text
 import os
 import tempfile
 
@@ -55,15 +57,25 @@ db.init_app(app)
 # pertama kali dipanggil.
 with app.app_context():
     db.create_all()
+    # create_all tidak mengubah tabel lama. Tambahkan kolom baru secara aman
+    # agar deployment yang sudah memiliki sewa_alat.db tetap kompatibel.
+    sewa_columns = {column['name'] for column in inspect(db.engine).get_columns('sewa')}
+    with db.engine.begin() as connection:
+        if 'user_id' not in sewa_columns:
+            connection.execute(text('ALTER TABLE sewa ADD COLUMN user_id INTEGER'))
+        if 'order_status' not in sewa_columns:
+            connection.execute(text("ALTER TABLE sewa ADD COLUMN order_status VARCHAR(20) NOT NULL DEFAULT 'menunggu'"))
 
 # Register Blueprints
 app.register_blueprint(alat_bp)
 app.register_blueprint(penyewa_bp)
 app.register_blueprint(sewa_bp)
 app.register_blueprint(laporan_bp)
+app.register_blueprint(shop_bp)
 
 
-# Login dinonaktifkan: seluruh halaman dapat diakses langsung tanpa session.
+# Login admin lama dipertahankan untuk kompatibilitas URL, sedangkan user
+# memakai autentikasi terpisah di /shop/login.
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

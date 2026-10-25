@@ -3,6 +3,7 @@ Database initialization menggunakan Flask-SQLAlchemy
 """
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -34,6 +35,29 @@ class Alat(db.Model):
     
     def __repr__(self):
         return f'<Alat {self.nama}>'
+
+
+class User(db.Model):
+    """Akun pelanggan untuk user panel."""
+    __tablename__ = 'user'
+
+    id = db.Column(db.Integer, primary_key=True)
+    nama = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False, index=True)
+    no_hp = db.Column(db.String(20), nullable=False)
+    alamat = db.Column(db.Text, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    sewa = db.relationship('Sewa', backref='user', lazy=True)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def __repr__(self):
+        return f'<User {self.email}>'
 
 
 class Penyewa(db.Model):
@@ -81,6 +105,8 @@ class Sewa(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     penyewa_id = db.Column(db.Integer, db.ForeignKey('penyewa.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True, index=True)
+    order_status = db.Column(db.String(20), nullable=False, default='menunggu')
     tanggal_sewa = db.Column(db.DateTime, nullable=False)
     tanggal_rencana_kembali = db.Column(db.DateTime, nullable=False)
     tanggal_kembali_aktual = db.Column(db.DateTime, nullable=True)

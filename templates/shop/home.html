@@ -1,0 +1,19 @@
+{% extends 'shop/base.html' %}
+{% block title %}Sewa gear untuk perjalanan berikutnya{% endblock %}
+{% block content %}
+<section class="shop-hero">
+  <div class="hero-copy">
+    <span class="eyebrow">GEAR YANG SIAP MENEMANI</span>
+    <h1>Rencanakan perjalanan.<br><em>Kami siapkan perlengkapannya.</em></h1>
+    <p>Temukan perlengkapan outdoor terawat untuk camping, hiking, dan weekend escape tanpa harus memenuhi garasi.</p>
+    <a class="button button-dark" href="#koleksi">Jelajahi koleksi <span>↘</span></a>
+  </div>
+  <div class="hero-art"><div class="sun"></div><div class="mountain mountain-back"></div><div class="mountain mountain-front"></div><div class="hero-card"><strong>01—</strong><span>Weekend<br>escape kit</span></div></div>
+</section>
+<section class="shop-section" id="koleksi">
+  <div class="section-heading"><div><span class="eyebrow">PILIHAN UNTUKMU</span><h2>Gear untuk setiap rencana</h2></div><span class="result-count">{{ alat_list|length }} item tersedia</span></div>
+  <form class="filter-bar" method="get" action="{{ url_for('shop.home') }}"><div class="search-field">⌕<input name="q" value="{{ query }}" placeholder="Cari tenda, backpack, sleeping bag..."></div><select name="kategori" onchange="this.form.submit()"><option value="">Semua kategori</option>{% for item in kategori_list %}<option value="{{ item }}" {% if kategori == item %}selected{% endif %}>{{ item }}</option>{% endfor %}</select><button class="button button-outline" type="submit">Cari gear</button></form>
+  <div class="product-grid">{% for alat in alat_list %}<article class="product-card"><a class="product-visual tone-{{ loop.index % 5 }}" href="{{ url_for('shop.detail', id=alat.id) }}"><span class="product-category">{{ alat.kategori }}</span><span class="product-shape">{% if 'tenda' in alat.kategori|lower %}⌂{% elif 'sleep' in alat.kategori|lower %}◒{% elif 'back' in alat.kategori|lower %}◈{% else %}✦{% endif %}</span><span class="detail-link">Lihat detail ↗</span></a><div class="product-info"><div><h3>{{ alat.nama }}</h3><p>{{ alat.kondisi|capitalize }} · stok {{ alat.stok }}</p></div><strong>{{ alat.harga_per_hari|format_currency }}<small>/hari</small></strong></div><form method="post" action="{{ url_for('shop.add_cart', id=alat.id) }}"><input type="hidden" name="jumlah" value="1"><button class="add-button" type="submit">Tambah ke keranjang <span>+</span></button></form></article>{else}<div class="empty-state">Belum ada gear yang sesuai pencarian.</div>{% endfor %}</div>
+</section>
+<section class="trust-strip"><div><strong>Gear terawat</strong><span>Diperiksa sebelum disewakan</span></div><div><strong>Harga transparan</strong><span>Tanpa biaya tersembunyi</span></div><div><strong>Siap berangkat</strong><span>Booking dalam beberapa menit</span></div></section>
+{% endblock %}
