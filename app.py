@@ -63,23 +63,7 @@ app.register_blueprint(sewa_bp)
 app.register_blueprint(laporan_bp)
 
 
-@app.before_request
-def require_login():
-    """Require admin login for most routes.
-
-    Exceptions: static files and the login/logout endpoints.
-    """
-    # Allow static files, login and error handlers
-    endpoint = request.endpoint or ''
-    if endpoint.startswith('static'):
-        return
-    if endpoint in ('login', 'logout'):
-        return
-
-    # If not logged in, redirect to login page
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('login'))
-
+# Login dinonaktifkan: seluruh halaman dapat diakses langsung tanpa session.
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
